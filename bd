@@ -1,0 +1,77 @@
+create database [fastfood] 
+go 
+use [fastfood] 
+go 
+create table [dish]( 
+[ID] bigint identity(1,1) primary key, 
+[Name] varchar(200) not null, 
+[Price] money not null, 
+[Count] int not null 
+) 
+go 
+create table [image]( 
+[ID] bigint identity(1,1) primary key, 
+[Caption] varchar(100) not null, 
+[URL] varchar(255) not null 
+) 
+create table dishimage( 
+[Dish] bigint foreign key references [dish](ID), 
+[Image] bigint foreign key references [image](ID), 
+PRIMARY KEY ([Dish],[Image]) 
+) 
+go 
+create table [unit]( 
+[Name] varchar(20) primary key 
+) 
+go 
+create table [ingredient]( 
+[Articule] bigint identity(1,1) primary key, 
+[Name] varchar(200) not null, 
+[Unit] varchar(20) references [unit]([Name]) not null 
+) 
+go 
+create table [dishcompound]( 
+[Dish] bigint foreign key references [dish]([ID]), 
+[Ingredient] bigint foreign key references [ingredient](Articule), 
+[Volume] decimal not null, 
+PRIMARY KEY ([Dish],[Ingredient]) 
+) 
+go 
+create table [orderstatus]( 
+[Name] varchar(20) primary key 
+) 
+go 
+create table [client]( 
+[Phone] varchar(10) primary key, 
+[FullName] varchar(200) not null, 
+[Address] varchar(200) not null 
+) 
+go 
+create table [dishstatus]( 
+[Name] varchar(20) primary key 
+) 
+go 
+create table [employee]( 
+[Phone] varchar(10) primary key, 
+[Password] varchar(18) not null, 
+[Name] varchar(32) not null, 
+[Surname] varchar(32) not null, 
+[Patronymic] varchar(32) not null, 
+) 
+go 
+create table [order]( 
+[ID] bigint identity(1,1) primary key, 
+[Client] varchar(10) references [client](Phone) not null, 
+[Employee] varchar(10) references [employee]([Phone]) not null, 
+[Date] datetime not null, 
+[Status] varchar(20) references [orderstatus]([Name]) not null 
+) 
+go 
+create table [ordercompound]( 
+[Order] bigint foreign key references [order]([ID]), 
+[Dish] bigint foreign key references [dish]([ID]), 
+[Price] money not null, 
+[Count] int not null, 
+[Status] varchar(20) references [dishstatus]([Name]) not null, 
+PRIMARY KEY ([Dish],[Order]) 
+)
